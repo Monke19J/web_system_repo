@@ -1,33 +1,31 @@
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="my.css">
 </head>
+
 <body class="register">
     <div class="container">
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-            <?php
-                if(isset($_GET["error"])){
-                    if($_GET["error"] == "accexists"){ ?>
+                <?php
+                if (isset($_GET["error"])) {
+                    if ($_GET["error"] == "accexists") { ?>
                         <div class="alert alert-danger">An account already exist!!! </div>
-                    <?php }
-                    elseif($_GET["error"] == "passmismatch"){ ?>
+                    <?php } elseif ($_GET["error"] == "passmismatch") { ?>
                         <div class="alert alert-danger">Password and Confirmation Password do not match </div>
-                    <?php }
-                    elseif($_GET["error"] == "notallowed"){ ?>
-                        <div class="alert alert-danger">Fuck you</div> 
-                    <?php }
+                    <?php } elseif ($_GET["error"] == "notallowed") { ?>
+                        <div class="alert alert-danger">Fuck you</div>
+                <?php }
                 }
-            ?>  
+                ?>
             </div>
             <div class="col-3"></div>
         </div>
-         
-        <br>
         <div class="row">
             <div class="col-4"></div>
             <div class="col-4">
@@ -35,7 +33,7 @@
             </div>
             <div class="col-4"></div>
         </div>
-        <br><br>
+        <br>
 
         <div class="row">
             <div class="col-4">
@@ -45,14 +43,26 @@
             <div class="col-4">
                 <form action="register.php" method="post">
                     <div class="mb-3">
-                        <label for="fullname">Full Name
-                            <input type="text"  id="fullname" class="form-control" name="fullname" required>
+                        <label for="lastname">Last Name
+                            <input type="text" id="lastname" class="form-control" name="lastname" required>
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="firstname">First Name
+                            <input type="text" id="firstname" class="form-control" name="firstname" required>
+                        </label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="middlename">Middle Name
+                            <input type="text" id="middlename" class="form-control" name="middlename" required>
                         </label>
                     </div>
 
                     <div class="mb-3">
                         <label for="address">Address
-                            <input type="text"  id="address" class="form-control" name="address" required>
+                            <input type="text" id="address" class="form-control" name="address" required>
                         </label>
                     </div>
 
@@ -76,15 +86,17 @@
 
                     <div class="mb-3">
                         <input type="submit" class="btn btn-danger" name="submit">
+                        <a href="index.php" class="btn btn-primary text-white">Back</a>
                     </div>
                 </form>
             </div>
             <div class="col-4">
                 <img src="gigachad.jpeg" alt="picture in selwyn" height="250">
                 <h2>Register ka na Pogi</h2>
-             </div>
+            </div>
         </div>
     </div>
 </body>
-    <script src="js/bootstrap.js"></script>
+<script src="js/bootstrap.js"></script>
+
 </html>

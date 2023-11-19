@@ -1,40 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="my.css">
-</head>
-<body>
-    <div class="container">
-        <br><br><br>
-        <div class="row">
-            <div class="col-3"></div>
-            <div class="col-6">
-                <h1 class="font-control">Welcome <?php echo $_POST["uname"];  ?></h1>
-            </div>
-            <div class="col-3"></div>
-        </div>
+<?php
+include("db.php");
 
-        <br>
+if(isset($_POST["uname"])){
+    $uname = $_POST["uname"];
+    $pword = $_POST["pass"];
 
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4">
-                <p class="fontbig">
-                    <?php
-                        define("BR","<br>");
+    $sql_check_user = "SELECT * FROM users 
+                        WHERE username = '$uname' 
+                        AND password = '$pword'";
+    $users_result = mysqli_query($conn, $sql_check_user);
 
-                        echo "Your username is ".$_POST["uname"].BR;
-                        echo "Your password is ".$_POST["pass1"].BR;
-                    ?>
-                </p>  
-            </div>
-            <div class="col-4"></div>
-        </div>     
-    </div>
-</body>
-</html>
-
+    if(mysqli_num_rows($users_result) == 1){
+        $row = mysqli_fetch_assoc($users_result);
+        
+        if($row["user_type"] == 'U'){
+            header("location: users/index.php");
+        }
+        elseif($row["user_type"] == 'A'){
+            header("location: admin/index.php");
+        }
+        else{
+            header("location: index.php?error=nomatch");
+        }
+    }
+}
+else{
+    header("location: index.php?error=404");
+}
+?>
