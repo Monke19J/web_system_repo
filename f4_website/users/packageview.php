@@ -1,20 +1,18 @@
-
 <?php
-    include("../db.php");
-    $id_value = $_POST["id_value"];
-    $get_package = "SELECT * FROM package WHERE package_id = '$id_value'";
-    $package_result = mysqli_query($conn, $get_package);
+    session_start();
+    include("../db.php");    
+    
+    if(empty($_SESSION["packageview"])){
+        header("location: index.php?error=illegal_access");
+    }
 
-    if (mysqli_num_rows($package_result) == 0) {
-        header("location: index.php");
-    } 
+    $id_value = $_SESSION["package_id"];
 
-    $row = mysqli_fetch_assoc($package_result); 
-    $package_name =  $row["package_name"];
-    $description = $row["description"];
-    $package_type = $row["type_of_package"];
-    $pack_combopackage = $row["combopackage_id"];
-    $price = $row["package_cost"];
+    $package_name =  $_SESSION["package_name"];
+    $description = $_SESSION["description"];
+    $package_type = $_SESSION["package_type"];
+    $pack_combopackage = $_SESSION["pack_combopackage"];
+    $price = $_SESSION["price"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,63 +35,66 @@
 <body>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">   
-            <a href="index.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <a href="index_backend.php?back" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                 <span class="text-danger ms-1">back</span>
             </a>
             <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a href="#" class="nav-link active" aria-current="page">Home</a>
-                </li>
-                <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Log-out</a></li>
+                <li class="nav-item"><a href="reset_session.php" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="showhistory.php" class="nav-link">History</a></li>
+                <li class="nav-item"><a href="../logout.php" class="nav-link">Log-out</a></li>
             </ul>
         </header>
-        <div class="row-12">
+        
+        <div class="row-12 mb-4">
             <h1 class="text-success text-center fs-3">
                 <?php echo $package_name;?>
             </h1>
         </div>
-        <!-- the php code is repeatative -->
         
-        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner mb-4 overflow: hidden;" style="height: 400px;">
-                <?php
-                    if($package_type == "tour"){
-                        $get_activities = "SELECT * FROM activities WHERE act_type_id = 1";
-                    
-                    }
-                    elseif($package_type == "package"){
-                        $get_activities = "SELECT * FROM activities WHERE combopackage_id = $pack_combopackage";
-                    }
-                    elseif($package_type == "adventure"){
-                        $get_activities = "SELECT * FROM activities WHERE act_type_id != 1 AND act_type_id != 3";
-                    }
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <div id="carouselPicture" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner mb-4 overflow: hidden;" style="width: 550px; height: 350px">
+                        <?php
+                            if($package_type == "tour"){
+                                $get_activities = "SELECT * FROM activities WHERE act_type_id = 1 AND `status` = 'A'";
+                            }
+                            elseif($package_type == "package"){
+                                $get_activities = "SELECT * FROM activities WHERE combopackage_id = $pack_combopackage AND `status` = 'A'";
+                            }
+                            elseif($package_type == "adventure"){
+                                $get_activities = "SELECT * FROM activities WHERE act_type_id != 1 AND act_type_id != 3 AND `status` = 'A'";
+                            }
 
-                    $activity_result = mysqli_query($conn, $get_activities);
+                            $activity_result =  mysqli_query($conn, $get_activities);
 
-                    if (mysqli_num_rows($activity_result) > 0) {
-                        $row = mysqli_fetch_assoc($activity_result);
-                        echo '<div class="carousel-item active" style="height: 100%;">';
-                            echo '<img src="' . $row["activity_image"] . '" class="d-block w-100 h-100 object-fit: cover" alt="...">';
-                        echo '</div>';
-                    
-                        while ($row = mysqli_fetch_assoc($activity_result)) {
-                            echo '<div class="carousel-item" style="height: 100%;">';
-                            echo '<img src="' . $row["activity_image"] . '" class="d-block w-100 h-100 object-fit: cover" alt="...">';
-                            echo '</div>';
-                        }
-                    }
-                    else {
-                        echo '<div class="carousel-item active" style="height: 100%;">';
-                        echo '<img src="placeholder_image.jpg" class="d-block w-100 h-100 object-fit: cover" alt="No Image Available">';
-                        echo '</div>';
-                    }
-                ?>  
-                
+                            if (mysqli_num_rows($activity_result) > 0) {
+                                $row = mysqli_fetch_assoc($activity_result);
+                                echo '<div class="carousel-item active" style="height: 100%;">';
+                                    echo '<img src="' . $row["activity_image"] . '" class="d-block w-100 h-100 object-fit: cover" alt="...">';
+                                echo '</div>';
+                            
+                                while ($row = mysqli_fetch_assoc($activity_result)) {
+                                    echo '<div class="carousel-item" style="height: 100%;">';
+                                    echo '<img src="' . $row["activity_image"] . '" class="d-block w-100 h-100 object-fit: cover" alt="...">';
+                                    echo '</div>';
+                                }
+                            }
+                            else {
+                                echo '<div class="carousel-item active" style="height: 100%;">';
+                                echo '<img src="placeholder_image.jpg" class="d-block w-100 h-100 object-fit: cover" alt="No Image Available">';
+                                echo '</div>';
+                            }
+                        ?>  
+                        
+                    </div>
+                </div>
             </div>
+            <div class="col-3"></div>
         </div>
+
+        
         <hr>
         <div class="row mb-5">
             <h3 class="fs-4 text-primary-emphasis">Description</h3>
@@ -101,7 +102,7 @@
         </div>
         <hr>
         <div class="row mb-5">
-            <form action="select_activity.php" method="post">
+            <form action="packageview_backend.php" method="post">
                 <div>
                     <label for="startDate">Select Start Date:</label>
                     <input type="date" id="startDate" name="startDate" required>
@@ -110,49 +111,11 @@
                     <label for="endDate">Select End Date:</label>
                     <input type="date" id="endDate" name="endDate" required>
                 </div>
-                <input type="hidden" name="id_value" value="<?php echo $id_value; ?>">
                 <span class="fw-bold"><?php echo"Php ".$price ?></span>
-                <button class="btn btn-success ms-1 mt-3" type="submit" >Book Package</button>
+                <button class="btn btn-success ms-1 mt-3" type="submit" name="select_activity" value="access" >Book Package</button>
             </form>            
         </div>
     </div>
-
 </body>
-<!-- to only operate the collapse if the dates are fill first -->
-
-<!-- <script>
-    function updateEndDateMin() {
-        var startDate = document.getElementById("startDate").value;
-        document.getElementById("endDate").min = startDate;
-
-        var startDateObj = new Date(startDate);
-        var endDateObj = new Date(document.getElementById("endDate").value);
-
-        var timeDifference = endDateObj - startDateObj;
-        var daysDifference = Math.ceil(timeDifference / (1000* 60* 60* 24));
-
-        document.getElementById("numberOfDaysInput").value = daysDifference;
-        document.getElementById("numberOfDays").innerHTML = daysDifference;
-    }
-
-    function validateAndToggle() {
-        if (validateDates()){
-            $("#activityCards").collapse("toggle")
-        }
-    }
-
-    function validateDates() {
-        var startDate = document.getElementById("startDate").value;
-        var endDate = document.getElementById("endDate").value;
-
-        if(!startDate || !endDate) {
-            alert("Please select both start and end dates.");
-            return false;
-        }else{
-            return true;
-        }
-        
-    }
-</script> -->
 <script src="../js/bootstrap.js"></script>
 </html>

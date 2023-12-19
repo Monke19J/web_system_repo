@@ -2,33 +2,33 @@
 include("db.php");
 ?>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="my.css">
 </head>
-
 <body>
     <div class="container">
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
                 <?php
-                if (isset($_GET["msg"])) {
-                    if ($_GET["msg"] == "success") { ?>
-                        <div class="alert alert-primary">You have created you account successfully</div>
-                <?php }
-                }
-                if (isset($_GET["error"])) {
-                    if ($_GET["error"] == "nomatch") { ?>
-                        <div class="alert alert-danger">Incorrect Username or Password</div>
-                <?php }
-                    elseif ($_GET["error"] == "404") { ?>
-                        <div class="alert alert-danger">Brute Force of Entry is detected</div>
-                <?php }
-                }
+                    if (isset($_GET["msg"])) {
+                        if ($_GET["msg"] == "success") { ?>
+                            <div class="alert alert-primary">You have created you account successfully</div>
+                <?php   }
+                    }
+                    if (isset($_GET["error"])) {
+                        if ($_GET["error"] == "invalid_input") { ?>
+                            <div class="alert alert-danger">Invalid Username or Password</div>
+                <?php   }
+                        elseif($_GET["error"] == "invalid_entry"){ ?>
+                            <div class="alert alert-danger">Force of Entry Detected</div>
+                <?php   }
+                        elseif($_GET["error"] == "404"){ ?>
+                            <div class="alert alert-danger">No User_type found</div>
+                <?php   }
+                    }
                 ?>
             </div>
             <div class="col-3"></div>
@@ -78,5 +78,4 @@ include("db.php");
     </div>
 </body>
 <script src="js/bootstrap.js"></script>
-
 </html>

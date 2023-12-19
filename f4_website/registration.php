@@ -1,10 +1,8 @@
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
     <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="my.css">
 </head>
 
 <body class="register">
@@ -16,9 +14,11 @@
                 if (isset($_GET["error"])) {
                     if ($_GET["error"] == "accexists") { ?>
                         <div class="alert alert-danger">An account already exist!!! </div>
-                    <?php } elseif ($_GET["error"] == "passmismatch") { ?>
+                <?php }
+                    elseif ($_GET["error"] == "passmismatch") { ?>
                         <div class="alert alert-danger">Password and Confirmation Password do not match </div>
-                    <?php } elseif ($_GET["error"] == "notallowed") { ?>
+                <?php } 
+                    elseif ($_GET["error"] == "notallowed") { ?>
                         <div class="alert alert-danger">Fuck you</div>
                 <?php }
                 }
